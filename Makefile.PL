@@ -84,12 +84,10 @@ my %WriteMakefile = (
 				},
 			homepage => $github,
 			},
+		extra_modules => [qw()],
 		},
 
 	'clean' => { FILES => "$dist-*" },
-
-	'EXTRA_MODULES' => [qw(
-		)],
 	);
 
 sub arguments { \%WriteMakefile }
