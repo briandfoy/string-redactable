@@ -144,7 +144,7 @@ sub placeholder ( $class ) {
 =cut
 
 sub STORABLE_freeze ($self, $cloning) {
-	$_[0]->placeholder;
+	$self->placeholder;
 	}
 
 =item TO_JSON
