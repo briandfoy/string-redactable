@@ -102,7 +102,7 @@ my $new_key = sub ($class, $length = 512) {
 	substr(
 		join( '',
 			List::Util::shuffle(
-				map { List::Util::shuffle( 'A' .. 'Z', qw(= ! # : ;) ) } 1 .. 25
+				map { List::Util::shuffle( 'A' .. 'Z', 'a' .. 'z', qw(= ! : ;) ) } 1 .. 25
 				)
 			),
 		0, $length
