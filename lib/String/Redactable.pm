@@ -129,7 +129,7 @@ sub DESTROY ($self) {
 
 =item placeholder
 
-The value that is substituted for the
+The value that is substituted for the actual string.
 
 =cut
 
@@ -141,6 +141,8 @@ sub placeholder ( $class ) {
 
 =item STORABLE_freeze
 
+Redact strings used in L<Storable>.
+
 =cut
 
 sub STORABLE_freeze ($self, $cloning) {
@@ -148,6 +150,8 @@ sub STORABLE_freeze ($self, $cloning) {
 	}
 
 =item TO_JSON
+
+Redact the string in serializers that respect C<TO_JSON>
 
 =cut
 
