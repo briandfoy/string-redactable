@@ -87,6 +87,9 @@ my %WriteMakefile = (
 		},
 
 	'clean' => { FILES => "$dist-*" },
+
+	'EXTRA_MODULES' => [qw(
+		)],
 	);
 
 sub arguments { \%WriteMakefile }
