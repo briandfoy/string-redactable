@@ -3,6 +3,7 @@ use utf8;
 
 package String::Redactable;
 use experimental qw(signatures);
+use warnings::register;
 
 use Encode ();
 
@@ -80,6 +81,7 @@ use overload
 	q("") => sub { $_[0]->placeholder },
 	'0+'  => sub { 0 },
 	'-X'  => sub { () },
+
 	map { $_ => sub { () } } qw(
 		<=> cmp
 		lt le gt ge eq ne
@@ -119,11 +121,12 @@ sub new ($class, $string, $opts={}) {
 	my $encoded = Encode::encode( 'UTF-8', $string );
 	my $hidden = ($encoded ^ $key);
 	my $self = bless \$hidden, $class;
-	$keys{$self} = $key;
+	{ local $SIG{__WARN__} = sub {}; $keys{$self} = $key };
 	$self;
 	}
 
 sub DESTROY ($self) {
+	local $SIG{__WARN__} = sub {};
 	delete $keys{$self};
 	}
 
@@ -135,7 +138,9 @@ The value that is substituted for the actual string.
 
 sub placeholder ( $class ) {
 	state $rc = require Carp;
-	Carp::carp "Possible unintended interpolation of a redactable string";
+	Carp::cluck(
+		"Possible unintended interpolation of a redactable string",
+		) if warnings::enabled();
 	'<redacted data>'
 	}
 
@@ -151,7 +156,7 @@ sub STORABLE_freeze ($self, $cloning) {
 
 =item TO_JSON
 
-Redact the string in serializers that respect C<TO_JSON>
+Redact the string in serializers that respect C<TO_JSON>.
 
 =cut
 
@@ -164,6 +169,7 @@ sub TO_JSON {
 =cut
 
 sub to_str_unsafe ($self) {
+	local $SIG{__WARN__} = sub {};
 	my $encoded = ($$self ^ $keys{$self}) =~ s/\000+\z//r;
 	Encode::decode( 'UTF-8', $encoded );
 	}
