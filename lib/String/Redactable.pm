@@ -91,14 +91,6 @@ use overload
 
 my %keys = ();
 
-=item key
-
-Returns the XOR key. This is not meant to be cryptographically
-secure. It's merely here so that the redacted string does not show
-up in the object dump.
-
-=cut
-
 my $new_key = sub ($class, $length = 512) {
 	state $rc = require List::Util;
 	substr(
