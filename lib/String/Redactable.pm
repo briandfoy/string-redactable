@@ -8,7 +8,7 @@ use warnings::register;
 use Carp qw(carp);
 use Encode ();
 
-our $VERSION = '0.001_01';
+our $VERSION = '0.901';
 
 =encoding utf8
 
