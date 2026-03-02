@@ -5,6 +5,7 @@ package String::Redactable;
 use experimental qw(signatures);
 use warnings::register;
 
+use Carp qw(carp);
 use Encode ();
 
 our $VERSION = '0.001_01';
@@ -30,7 +31,7 @@ C<String::Redactable> tries to prevent you from accidentally exposing
 a sensitive string, such as a password, in a larger string, such as a
 log message or data dump.
 
-When you carelessy use this as a simple string, you get back the
+When you carelessly use this as a simple string, you get back the
 literal string C<*redacted data*>. To get the actual string, you call
 C<to_str_unsafe>:
 
@@ -104,12 +105,25 @@ my $new_key = sub ($class, $length = 512) {
 	;
 	};
 
-=item new
+=item new( STRING )
+
+Creates an object that hides that string by XOR-ing it with another string that
+is not stored in the object, and is not a package variable.
+
+This does not mean that the original string can't be recovered in other ways if
+someone wanted to try hard enough, but it keeps you from unintentionally dumping
+it into output where it shouldn't be.
 
 =cut
 
 sub new ($class, $string, $opts={}) {
+	unless( length $string ) {
+		carp sprintf "Argument to %s::new is zero length", __PACKAGE__;
+		return;
+		}
+
 	my $key = $opts->{key} // $new_key->( 5 * length $string );
+
 	my $encoded = Encode::encode( 'UTF-8', $string );
 	my $hidden = ($encoded ^ $key);
 	my $self = bless \$hidden, $class;
@@ -158,6 +172,8 @@ sub TO_JSON {
 
 =item to_str_unsafe
 
+Returns the string that you are trying to hide.
+
 =cut
 
 sub to_str_unsafe ($self) {
@@ -176,7 +192,7 @@ sub to_str_unsafe ($self) {
 
 =head1 SOURCE AVAILABILITY
 
-This source is in Github:
+This source is on Github:
 
 	http://github.com/briandfoy/string-redactable
 
