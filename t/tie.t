@@ -20,6 +20,7 @@ subtest 'sanity' => sub {
 	};
 
 subtest 'tie' => sub {
+	use warnings;
 	my $warnings;
 	local $SIG{__WARN__} = sub { $warnings = $_[0] };
 	my $warnings_re = qr/\APossible unintended/;

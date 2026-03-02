@@ -40,7 +40,7 @@ foreach my $tuple ( @strings ) {
 			};
 
 		subtest 'concatenation' => sub {
-			undef $warnings;
+			use warnings; undef $warnings;
 			is '' . $s, $s->placeholder, "substr gets just the placeholder";
 			like $warnings, $warning_regex, 'saw warning about interpolation';
 			};
@@ -50,7 +50,7 @@ foreach my $tuple ( @strings ) {
 			};
 
 		subtest 'interpolate' => sub {
-			undef $warnings;
+			use warnings; undef $warnings;
 			is "$s", $s->placeholder, "interpolation with quotes gets just the placeholder";
 			like $warnings, $warning_regex, 'saw warning about interpolation';
 
