@@ -44,4 +44,4 @@ Tie::String::Redactable - work even harder to redact a string
 
 =cut
 
-__PACKAGE__
+__PACKAGE__;
