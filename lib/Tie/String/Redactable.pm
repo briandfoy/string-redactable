@@ -6,7 +6,7 @@ use parent qw(Tie::Scalar);
 use String::Redactable;
 use warnings;
 
-our $VERSION = '1.087';
+our $VERSION = '1.088';
 
 sub TIESCALAR ($class, $string) {
 	local $SIG{__WARN__} = sub {};
