@@ -122,18 +122,18 @@ sub new ($class, $string, $opts={}) {
 		return;
 		}
 
-	my $key = $opts->{key} // $new_key->( 5 * length $string );
+	my $key = $opts->{'key'} // $new_key->( 5 * length $string );
 
 	my $encoded = Encode::encode( 'UTF-8', $string );
 	my $hidden = ($encoded ^ $key);
 	my $self = bless \$hidden, $class;
-	{ local $SIG{__WARN__} = sub {}; $keys{$self} = $key };
+	{ local $SIG{__WARN__} = sub {}; $keys{overload::StrVal($self)} = $key };
 	$self;
 	}
 
 sub DESTROY ($self) {
 	local $SIG{__WARN__} = sub {};
-	delete $keys{$self};
+	delete $keys{overload::StrVal($self)};
 	}
 
 =item placeholder
@@ -178,7 +178,7 @@ Returns the string that you are trying to hide.
 
 sub to_str_unsafe ($self) {
 	local $SIG{__WARN__} = sub {};
-	my $encoded = ($$self ^ $keys{$self}) =~ s/\000+\z//r;
+	my $encoded = ($$self ^ $keys{overload::StrVal($self)}) =~ s/\000+\z//r;
 	Encode::decode( 'UTF-8', $encoded );
 	}
 
